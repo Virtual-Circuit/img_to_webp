@@ -42,8 +42,8 @@ def getFiles(dir, suf_list, recur):
 
     res = []    # 创建文件列表
     
-    # 不迭代方法，获取该文件夹下所有指定后缀文件
-    if recur == "0": 
+    # os.walk方法，自动获取该文件夹下所有指定后缀文件(包括子文件夹)
+    if recur == "1": 
         """
         os.walk方法返回一个三元组
 
@@ -63,13 +63,14 @@ def getFiles(dir, suf_list, recur):
 
                 # 将被读取文件的名字拆分成name:文件名及suf:后缀名
                 name, suf = os.path.splitext(filename)
+                
                 # 将被读取文件的后缀名，依次与后缀名列表suf_list进行对比
                 for suffix in suf_list:
                     if suf == suffix:
                         # 后缀名符合条件，则将其文件绝对路径加入到列表res
                         res.append(file_path)
 
-    elif recur == "1":
+    elif recur == "0":
         """
         os.listdir列出目录中所有的文件，返回列表数据
         """
@@ -91,16 +92,17 @@ def getFiles(dir, suf_list, recur):
                 if suf == suffix:
                     # 后缀名符合条件，则将其文件绝对路径加入到列表res
                     res.append(file_path)
-            # 若文件实际为文件夹
-            if os.path.isdir(file_path):    
-                """ 
-                将该文件夹的路径再次带入getFiles函数进行迭代
-                除了路径有变外，其他参数不变
-                res.extend类似于res.append(列表末尾加入新数据)
-                在列表末尾继续加入另一列表的数据
-                即将迭代获得的子文件夹的文件列表加入总的文件列表
-                 """
-                res.extend(getFiles(file_path, suf_list, recur))   
+                    
+            # 若文件实际为文件夹，可以进行迭代，继续遍历子文件夹下的文件
+            # if os.path.isdir(file_path):    
+            #     """ 
+            #     将该文件夹的路径再次带入getFiles函数进行迭代
+            #     除了路径有变外，其他参数不变
+            #     res.extend类似于res.append(列表末尾加入新数据)
+            #     在列表末尾继续加入另一列表的数据
+            #     即将迭代获得的子文件夹的文件列表加入总的文件列表
+            #      """
+            #     res.extend(getFiles(file_path, suf_list, recur))   
 
     return res
 
